@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>SaveRoomTeleport</AssemblyName>
+    <RootNamespace>SaveRoomTeleport</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    <GameDir Condition="'$(GameDir)' == ''">/mnt/d/SteamLibrary/steamapps/common/Castlevania Belmont's Curse</GameDir>
+    <InteropDir>$(GameDir)/BepInEx/interop</InteropDir>
+    <CoreDir>$(GameDir)/BepInEx/core</CoreDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- lab/ holds the TeleportLab test harness (snapshots, diffs, probes); not part of the mod. -->
+    <Compile Remove="lab/**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="$(CoreDir)/BepInEx.Core.dll" Private="false" />
+    <Reference Include="$(CoreDir)/BepInEx.Unity.IL2CPP.dll" Private="false" />
+    <Reference Include="$(CoreDir)/0Harmony.dll" Private="false" />
+    <Reference Include="$(CoreDir)/Il2CppInterop.Runtime.dll" Private="false" />
+    <Reference Include="$(CoreDir)/Il2CppInterop.Common.dll" Private="false" />
+    <Reference Include="$(InteropDir)/*.dll" Private="false" />
+  </ItemGroup>
+
+  <Target Name="DeployToGame" AfterTargets="Build" Condition="'$(Deploy)' == 'true'">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(GameDir)/BepInEx/plugins" />
+  </Target>
+
+</Project>
