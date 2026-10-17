@@ -1,5 +1,6 @@
 using Il2CppInterop.Runtime;
 using UnityEngine;
+using UnityEngine.Localization.Settings;
 
 namespace SaveRoomTeleport;
 
@@ -87,7 +88,22 @@ internal static class MapInput
         _mapUi.hasInteractFootnoteInitBooleanView?.SetBool(true);
         _mapUi.hasInteractFootnoteBooleanView?.SetBool(true);
         var label = _mapUi.interactFootnoteText?.textDisplay;
-        if (label != null && label.text != Plugin.FooterLabel.Value) label.text = Plugin.FooterLabel.Value;
+        var text = PromptText();
+        if (label != null && label.text != text) label.text = text;
+    }
+
+    static string _promptLocale, _promptText;
+
+    // The boatman's own action label, as the game translates it for the current language (all 11 have it).
+    // Re-read when the player changes the language.
+    static string PromptText()
+    {
+        var locale = LocalizationSettings.SelectedLocale?.Identifier.Code;
+        if (_promptText != null && locale == _promptLocale) return _promptText;
+        _promptLocale = locale;
+        var text = LocalizationSettings.StringDatabase.GetLocalizedString("UI_FastTravel", "FastTravel_TravelTodestination");
+        _promptText = string.IsNullOrWhiteSpace(text) ? "Travel" : text;
+        return _promptText;
     }
 
     // The map lives in its own scene, loaded when it opens. Searching the scene is expensive, so it only

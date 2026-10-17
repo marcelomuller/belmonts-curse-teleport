@@ -12,16 +12,13 @@ public class Plugin : BasePlugin
 {
     public const string Guid = "marcelo.belmontscurse.saveroomteleport";
     public const string Name = "SaveRoomTeleport";
-    public const string Version = "1.2.1";
+    public const string Version = "1.3.0";
 
     internal static ManualLogSource L;
     internal static ConfigEntry<bool> Enabled;
     internal static ConfigEntry<bool> UseSavePoint;
     internal static ConfigEntry<bool> PreserveStats;
     internal static ConfigEntry<MainGameLoadingType> LoadingType;
-    internal static ConfigEntry<string> FooterLabel;
-    internal static ConfigEntry<string> PopupTitle;
-    internal static ConfigEntry<string> PopupMessage;
 
     public override void Load()
     {
@@ -37,9 +34,6 @@ public class Plugin : BasePlugin
             "potions or drop overdrive charges.");
         LoadingType = Config.Bind("Advanced", "LoadingType", MainGameLoadingType.LoadSave,
             "How the level is reloaded. Tested: LoadSave, Default. Avoid Death and FastTravel.");
-        FooterLabel = Config.Bind("Text", "MapPrompt", "Teleport", "Label next to the interact button on the map.");
-        PopupTitle = Config.Bind("Text", "PopupTitle", "Teleport", "Confirmation popup title.");
-        PopupMessage = Config.Bind("Text", "PopupMessage", "Teleport to this save room?", "Confirmation popup message.");
 
         ClassInjector.RegisterTypeInIl2Cpp<Teleporter>();
         var go = new GameObject(Name);

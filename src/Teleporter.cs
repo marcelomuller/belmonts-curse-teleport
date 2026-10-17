@@ -1,6 +1,5 @@
 using System;
 using Il2CppInterop.Runtime;
-using TMPro;
 using UnityEngine;
 
 namespace SaveRoomTeleport;
@@ -41,17 +40,9 @@ public class Teleporter : MonoBehaviour
             return;
         }
 
+        // The boatman's popup texts, as the game translates them for the current language.
         var ui = UIManager.GetInstance();
-        var boatman = ui.fastTravelMenuManager?.confirmationPopupTexts;
-        var texts = new ConfirmationPopup.Texts();
-        if (boatman != null)
-        {
-            // Localized cancel/confirm from the boatman; title and message are overwritten below.
-            texts.title = boatman.title;
-            texts.message = boatman.message;
-            texts.cancel = boatman.cancel;
-            texts.confirm = boatman.confirm;
-        }
+        var texts = ui.fastTravelMenuManager?.confirmationPopupTexts ?? new ConfirmationPopup.Texts();
         _popup = ui.confirmationPopup;
         Enter(Phase.Confirming);
         ui.OpenConfirmPopup(texts,
@@ -99,7 +90,6 @@ public class Teleporter : MonoBehaviour
                 _timer += Time.unscaledDeltaTime;
                 // Closed without a callback (e.g. the back button): treat it as a cancel.
                 if (_timer > 0.5f && (_popup == null || !_popup.visible)) OnCancel();
-                else ApplyPopupTexts();
                 break;
 
             case Phase.ClosingMenus:
@@ -252,18 +242,5 @@ public class Teleporter : MonoBehaviour
         _returning = false;
         _savePointUse = null;
         _phase = Phase.Idle;
-    }
-
-    void ApplyPopupTexts()
-    {
-        if (_popup == null) return;
-        SetText(_popup.titleLabel, Plugin.PopupTitle.Value);
-        SetText(_popup.messageLabel, Plugin.PopupMessage.Value);
-    }
-
-    static void SetText(Component holder, string text)
-    {
-        var label = holder?.GetComponentInChildren<TMP_Text>(true);
-        if (label != null && label.text != text) label.text = text;
     }
 }
